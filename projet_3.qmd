@@ -1,0 +1,465 @@
+---
+format: 
+  pdf:
+    documentclass: article
+    classoption: ["a4paper", "12pt", "fleqn"]
+    geometry: top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm
+    number-sections: true
+    toc: false  # Désactiver le sommaire automatique
+header-includes: |
+  \usepackage{hyperref}  % Liens cliquables
+  \hypersetup{
+    hidelinks  % Désactive complètement la mise en couleur des liens
+  }
+---
+
+```{=tex}
+\begin{titlepage}
+    \begin{center}
+        \vspace{\fill}  % Ajoute de l'espace flexible avant
+
+        {\LARGE \textbf{Séries temporelles univariées}}\\
+        \vspace{0.5cm}
+        {\Large M1 ECAP -- Séance 3 -- Année 2024/2025}\\
+        
+        \vspace{2cm}
+        
+        {\Large \textbf{TD1 : Modélisation ARIMA}}\\
+        \vspace{0.5cm}
+        \textit{Responsable d'enseignement : Benoît SÉVI}\\
+        \href{mailto:benoit.sevi@univ-nantes.fr}{benoit.sevi@univ-nantes.fr}\\
+        
+        \vspace{1.5cm}
+        
+        {\large \textbf{Juliette GRISON, Arthur ERNOUL DE LA PROVOTE}}
+        
+        \vspace{\fill}  % Ajoute de l'espace flexible après
+        
+        {\large \today}
+    \end{center}
+\end{titlepage}
+\begingroup
+\hypersetup{linkcolor=black}
+\tableofcontents
+\endgroup
+```
+\newpage
+
+# Développement et simulation de modèles saisonniers
+
+## Développement des modèles
+
+### Modèle 1
+
+\begin{enumerate}
+
+    \item[] $Y_t = \frac{\left(1 + \theta_1 L + \theta_2 L^2 \right) \left(1 + \Theta_1 L^4\right)}{\left(1 - \phi_1 L\right) \left(1 - \Phi_1 L^4\right)} \varepsilon_t$
+
+    \vspace{0.3cm} % Ajout d'un espace avant l'équation suivante
+
+    \begin{minipage}{\textwidth}
+    \[
+    Y_t = \frac{1 + \Theta_1 L^4 + \theta_1 L + \theta_1 \Theta_1 L^5 + \theta_2 L^2 +  \theta_2 \Theta_1 L^6}{1 - \Phi_1 L^4 - \phi_1 L + \phi_1 \Phi_1 L^5} \varepsilon_t
+    \]
+    \end{minipage}
+
+    \vspace{0.3cm} % Ajout d'un espace avant le texte explicatif
+
+    \noindent Au numérateur, le coefficient devant le 5ème et 6ème retard est négligeable. Donc MA(4). \\  
+    Au dénominateur, le coefficient devant le 5ème retard est aussi négligeable. Donc AR(4). \\
+
+    Nous avons donc un modèle ARMA(4,4), avec :
+    \begin{itemize}
+        \item 5 coefficients à estimer
+        \item 3 coefficients nuls
+    \end{itemize}
+
+\end{enumerate}
+
+
+### Modèle 2
+
+\begin{enumerate}
+
+    \item[] $Y_t = \frac{\left(1 + \theta_1 L\right) \left(1 + \Theta_1 L^6\right)}{\left(1 - \phi_1 L\right) \left(1 - \Phi_1 L^6\right)} \varepsilon_t$
+    
+    \vspace{0.5cm}
+    \noindent \
+    \begin{align*}
+    \\
+    \vspace{0.9cm}
+    &= \frac{1 + \Theta_1 L^6 + \theta_1 L + \theta_1 \Theta_1 L^7}{1 - \Phi_1 L^6 - \phi_1 L + \phi_1 \Phi_1 L^7} \varepsilon_t
+    \end{align*}
+
+   \noindent Nous obtenons initialement un processus $ARMA(7,7)$. Cependant, les coefficients $\theta_1 \Theta_1$ et $\phi_1 \Phi_1$ étant négligeables, nous nous ramenons à un $ARMA(6,6)$.
+
+Dans la partie $MA$, seuls $\theta_1$ et $\Theta_1$ sont présents, ce qui signifie que $4$ $(=6-2)$ coefficients sont nuls. Pour la partie $AR$, nous avons $\phi_1$ et $\Phi_1$, ce qui veut dire que $4$ $(=6-2)$ coefficients sont nuls.
+
+Au final :
+\begin{itemize}
+\item Pour la partie $MA$ : 1 coefficient est négligeable et 4 sont nuls.
+\item Pour la partie $AR$ : 1 coefficient est négligeable et 4 sont nuls.
+\end{itemize}
+
+Ainsi, il ne reste que 4 coefficients à estimer.  \\ \\ \\ \\
+
+\end{enumerate}
+
+
+### Modèle 3
+
+\begin{enumerate}
+
+    \item[] $Y_t = \frac{\left(1 + \Theta_1 L^{12}\right)}{\left(1 - \phi_1 L - \phi_2 L^2\right)} \varepsilon_t$
+    
+    \vspace{0.5cm}
+    \noindent \textbf{Réponse :}
+    \begin{align*}
+    Y_t &= \frac{\left(1 + \Theta_1 L^{12}\right)}{\left(1 - \phi_1 L - \phi_2 L^2\right)} \varepsilon_t \\
+    \vspace{0.9cm}
+    &= \frac{1 + \Theta_1 L^{12}}{1 - \phi_1 L - \phi_2 L^2} \varepsilon_t
+    \end{align*}
+
+   \noindent Nous obtenons donc un processus $ARMA(2,12)$. Étant donné qu'il n'y a pas de coefficient négligeable, nous conservons le processus tel quel.
+
+Dans la partie $MA$, seul $\Theta_1$ est présent, ce qui signifie que $11$ $(=12-1)$ coefficients sont nuls. Pour la partie $AR$, nous avons $\phi_1$ et $\phi_2$, ce qui veut dire qu'aucun $(=2-2)$ coefficient n'est nul.
+
+Au final :
+\begin{itemize}
+\item Pour la partie $MA$ : aucun coefficient n'est négligeable et 11 sont nuls.
+\item Pour la partie $AR$ : aucun coefficient n'est négligeable et aucun n'est nul.
+\end{itemize}
+
+Ainsi, il ne reste que 3 coefficients à estimer.  \\ \\ \\ \\
+
+\end{enumerate}
+
+## Analyse d'un échantillon de 500 observations
+
+## Modélisatin des processus simulés
+
+## Proposition d'un modèle contenant des résidus de type bruit blanc
+
+
+\newpage
+# Analyse d'une série temporelle saisonnière : la consommation de gaz naturel en France (2008-2024)
+\newpage
+
+
+# Analyse d'une série temporelle saisonnière avec tendance linéaire : la fréquentatin de l'aéroport Toulouse-Blagnac (1993-2008)
+
+## Travail préparatoire sur la série
+
+### Chargement des données et des librairies
+
+```{r}
+#| output: false
+
+# Librairies
+library(tseries)
+library(forecast)
+library(strucchange)
+library(knitr)
+library(kableExtra)
+
+# Données 
+load("trafmensu.rda")
+```
+
+### Premier aperçu de la série
+
+```{r}
+plot.ts(trafmensu, main = "Nombre de passagers - Toulouse-Blagnac (1993-2008)", ylab = "Passagers", xlab = "Année")
+```
+
+```{r}
+decomp <- decompose(trafmensu)
+plot(decomp)
+```
+
+La série temporelle présente des coupures et des changements structurels visibles dans la décomposition. Il serait alors pertinent de la découper en sous-périodes pour qu'elle soit plus homogène et linéaire.
+
+### Découpage de la série
+
+#### Zoom sur la tendance
+
+```{r}
+plot(decomp$trend, main = "Tendance estimée de la série")
+```
+
+#### Recherche des points de rupture
+
+```{r}
+bp_test <- breakpoints(trafmensu ~ 1)  # Recherche de points de rupture
+bp_test$breakpoints
+```
+
+Les points de ruptures 36, 74 et 134 représentent une période dans le temps. Sachant que c'est une série étalée sur 15 années (de 1993 à 2008), nous pouvons retrouver ces périodes à l'aide de calculs :
+
+- Indice 36 = 1993 + (36 ÷ 12) - 1 = 1995, décembre  
+- Indice 74 = 1993 + (74 ÷ 12) - 1 = 1999, octobre  
+- Indice 134 = 1993 + (134 ÷ 12) - 1 = 2004, février  
+
+
+Périodes distinctes :
+
+- 1993 - fin 1995  
+- 1996 - fin 1999  
+- 2000 - début 2004  
+- 2004 - 2008
+
+Entre début 1993 et fin 1999, la tendance est plutôt similaire donc on peut la regrouper en une période. Entre début 2001 et fin 2003, on observe une légère baisse (alors que la série est croissante dans son ensemble) qui risque d'introduire un biais dans nos estimations. C'est pourquoi il serait préférable de retirer cette période pour la suite de l'analyse. Entre début 2004 et fin 2008, le découpage est correct, nous pouvons donc conserver cette période telle quel.
+
+Nous nous retrouvons donc avec 2 périodes distinctes : 01/1993 - 12/1999 et 01/2004 - 12/2008.
+
+#### Découpage des périodes 
+
+##### Série 1
+```{r}
+traf_1 <- window(trafmensu, start = c(1993,1), end = c(1999,12))
+plot.ts(traf_1, main = "Nombre de passagers - Toulouse-Blagnac (1993-1999)", ylab = "Passagers", xlab = "Année") 
+```
+
+On observe une croissance linéaire durant cette période.
+
+##### Série 2
+```{r}
+traf_2 <- window(trafmensu, start = c(2004,1), end = c(2008,12))
+plot.ts(traf_2, main = "Nombre de passagers - Toulouse-Blagnac (2004-2008)", ylab = "Passagers", xlab = "Année")
+```
+
+Il y a également une tendance à la hausse pour la deuxième période, même si elle est moins explicite ; les fluctuations sont saccadées. 
+
+### Décomposition individuelle des séries
+
+#### Série 1
+```{r}
+decomp1 <- decompose(traf_1) 
+plot(decomp1) 
+mtext("Série 1 (1993-1999)", side = 3, line = 1, font = 1.5)
+```
+
+#### Série 2
+```{r}
+decomp2 <- decompose(traf_2) 
+plot(decomp2) 
+mtext("Série 2 (2004-2008)", side = 3, line = 1, font = 1.5) 
+```
+
+Ces deux séries suivent un schéma linéaire croissant. Afin de mieux les modéliser, il est nécessaire de retirer cette tendance. 
+
+### Supression de la tendance
+
+#### Différenciation première pour enlever les tendances
+```{r}
+# Série 1
+diff1_traf <- diff(traf_1, differences = 1) 
+# Série 2
+diff2_traf <- diff(traf_2, differences = 1)
+```
+
+#### Affichage des séries différenciées
+```{r}
+# Série 1
+plot.ts(diff1_traf, main = "Série 1 après différenciation première") 
+# Série 2
+plot.ts(diff2_traf, main = "Série 2 après différenciation première")
+```
+
+## Méthode de différenciation saisonnière
+
+### Mise en place de la différenciation
+
+#### Différenciation saisonnière (12 mois)
+```{r}
+# Série 1
+diff_season_traf1 <- diff(diff1_traf, lag = 12)
+# Série 2
+diff_season_traf2 <- diff(diff2_traf, lag = 12)
+```
+
+#### Affichage des séries transformées
+```{r}
+# Série 1
+plot.ts(diff_season_traf1, main = "Série 1 après différenciation saisonnière")
+# Série 2
+plot.ts(diff_season_traf2, main = "Série 2 après différenciation saisonnière")
+```
+
+La transformation sur les deux périodes semble avoir fonctionné. En effet, les séries semblent stationnaires : il n'y a plus de tendances et les variabilités sont constantes.
+Nous pouvons vérifier cette hypothèse à l'aide du test de stationnarité.
+
+#### Tests de stationnarité
+```{r}
+# Série 1
+adf.test(diff_season_traf1)
+# Série 2
+adf.test(diff_season_traf2)
+```
+
+Les p-values = 0.01 (< 0.05) donc les séries sont stationnaires : la différenciation a correctement été faite.
+
+### Différenciation saisonnière : série 1
+
+#### Autocorrélogramme (ACF) et autocorrélogramme partiel (PACF)
+```{r}
+par(mfrow=c(1,2))
+
+Acf(diff_season_traf1,lag.max = 24, main="ACF série 1 après différenciation saisonnière", col="red")
+
+Pacf(diff_season_traf1, lag.max = 24, main="PACF série 1 après différenciation saisonnière", col="darkgreen")
+```
+
+Les ACF et PACF montrent une significativité aux lags 1 et 12 ce qui suggère un modèle potentiel de type ARIMA(1,0,1). Il n'y a pas de composante saisonnière étant donné que celle-ci a été retirée
+
+#### Modélisation
+```{r}
+mod1_diff <- Arima(diff_season_traf1, order = c(1,0,1))
+summary(mod1_diff)
+```
+
+#### ACF et PACF des résidus
+```{r}
+Acf(residuals(mod1_diff))
+Pacf(residuals(mod1_diff))
+```
+
+Les autocorrélogrammes (ACF et PACF) nous indiquent une autocorrélation des résidus au niveau du lag 12. Afin de s'assurer que ce n'est pas une erreur du modèle et des coefficients choisis, nous effectuons le test de Ljung-Box.
+
+#### Ljung-Box Test
+```{r}
+checkresiduals(mod1_diff)
+```
+
+Les résidus ne sont pas autocorrélés (p-value = 0.264 > 0.05). Sachant également que les résidus que notre différentiation a été correctement effectuée (série stationnaire), il est possible que le pic au niveau du lag 12 soit simplement un bruit blanc.
+
+### Différenciation saisonnière : série 2
+
+#### Autocorrélogramme (ACF) et autocorrélogramme partiel (PACF)
+```{r}
+Acf(diff_season_traf2, lag.max = 24, main="ACF série 2 après différenciation saisonnière", col="red")
+Pacf(diff_season_traf2, lag.max = 24, main="PACF série 2 après différenciation saisonnière", col="darkgreen")
+```
+
+Les lags 1 et 3 légèrement significatifs dans l'ACF et la PACF. On suppose donc un  potentiel modèle ARIMA(1,0,1), toujours sans composante saisonnière.
+
+#### Modélisation
+```{r}
+mod2_diff <- Arima(diff_season_traf2, order = c(1,0,1))
+summary(mod2_diff)
+```
+
+#### ACF et PACF des résidus
+```{r}
+Acf(residuals(mod2_diff))
+Pacf(residuals(mod2_diff))
+```
+
+Tous les lags sont à l'intérieur des bornes ce qui indique l'absence d'autocorrélation entre les résidus.
+Nous pouvons vérifier cette information avec le test de Ljung-Box.
+
+#### Ljung-Box Test
+```{r}
+checkresiduals(mod2_diff)
+```
+
+Les résidus ne sont pas autocorrélés (p-value = 0.1819 < 0.05). Nous avons donc estimé un modèle correct.
+
+## Méthode de modélisation de type saisonnière
+
+On reprend  nos 2 séries pour lesquelles nous avons retiré la tendance mais dont la saisonnalité est toujours présente. On va maintenant procéder à une modélisation de type saisonnière.
+
+### Modèle de type saisonnier : série 1
+
+#### Autocorrélogramme (ACF) et autocorrélogramme partiel (PACF)
+```{r}
+Acf(diff1_traf, lag.max = 24, main="ACF série 1 sans différenciation saisonnière", col="red")
+Pacf(diff1_traf, lag.max = 24, main="PACF série 1 sans différenciation saisonnière", col="darkgreen")
+```
+
+L'ACF présente une alternance entre les lags significatifs et non significatifs ce qui peut suggérer une combinaison de MA et AR. On observe également des pics importants pour les lags 12 et 24, indiquant probablement une saisonnalité de 12 périodes.
+Concernant la PACF, les valeurs significatives aux lags 1, 2, 4, 7, 10, 11 peuvent suggérer un modèle ARMA.
+Nous allons donc modéliser cette série par une partie non saisonnière (0,0,2) avec MA(2), puis par une différenciation saisonnière et une composante MA(1) saisonnière (0,1,1,12).
+
+#### Modélisation
+```{r}
+mod1_saisonnier <- Arima(diff1_traf, order = c(0,0,2), seasonal = list(order = c(0,1,1), period = 12))
+summary(mod1_saisonnier)
+```
+
+#### ACF et PACF des résidus
+```{r}
+Acf(residuals(mod1_saisonnier))
+Pacf(residuals(mod1_saisonnier))
+```
+
+Ces autocorrélogrammes nous montrent que les résidus ne sont pas corrélés entre eux, ce qu'on peut vérifier avec le test de Ljung-Box.
+
+#### Ljung-Box Test
+```{r}
+checkresiduals(mod1_saisonnier)
+```
+
+Il n'y a pas d'autocorrélation des résidus (p-value = 0.8795 > 0.05).
+
+### Modèle de type saisonnier : série 2
+
+#### Autocorrélogramme (ACF) et autocorrélogramme partiel (PACF)
+```{r}
+Acf(diff2_traf, lag.max = 24, main="ACF série 2 sans différenciation saisonnière", col="red")
+Pacf(diff2_traf, lag.max = 24, main="PACF série 2 sans différenciation saisonnière", col="darkgreen")
+```
+
+Pour l'ACF, on observe  des pics aux lags 12 et 24, ce qui indique une saisonnalité à 12 périodes. Là aussi, il y a une alternance ente les lags significatifs et non significatifs, ce qui est typique d'une structure mixte AR/MA.
+Concernant la PACF, elle présente des valeurs significatives à 2, 7, 10, 11, avant d'être nulle, ce qui est compatible avec un AR(1) et une composante saisonnière.
+Pour modéliser cette série, on peut avoir recours à un schéma AR(1) en partie non saisonnière avec (1,0,1) pour capturer davantage de structure résiduelle. Puis, on y ajoute sa composante saisonnière avec un MA(1) saisonnier et 12 périodes (0,1,1,12), comme pour la série précédente.
+
+#### Modélisation
+```{r}
+mod2_saisonnier <- Arima(diff2_traf, order = c(1,0,1), seasonal = list(order = c(0,1,1), period = 12))
+summary(mod2_saisonnier)
+```
+
+#### ACF et PACF des résidus
+
+```{r}
+Acf(residuals(mod2_saisonnier))
+Pacf(residuals(mod2_saisonnier))
+```
+
+Les résidus se situent bien à l'intérieur des bornes de significativité pour l'ACF et la PACF. Cependant, on remarque que le lag 3 est très légèrement significatif.
+On va donc analyser le comportement des résidus avec le test de Ljung-Box.
+
+#### Ljung-Box Test
+```{r}
+checkresiduals(mod2_saisonnier)
+```
+
+Il n'y a donc pas d'autocorrélation entre les résidus (p-value = 0.06569 < 0.05). En effet, la p-value est limite mais acceptable.
+
+## Conclusion
+
+### Tableau récapitulatif
+
+
+```{r}
+resultats <- data.frame(
+  Critère = c("AIC", "BIC", "RMSE"),
+  "Différenciation 1" = c(574.83, 583.88, 13.02),
+  "Modèle saisonnier 1" = c(559.47, 568.52, 10.37),
+  "Différenciation 2" = c(279.07, 285.05, 13.95),
+  "Modèle saisonnier 2" = c(279.01, 285, 11.76)
+)
+
+kable(resultats, caption = "Comparaison des critères AIC, BIC et RMSE") %>%
+  kable_styling(full_width = FALSE) %>%
+  add_header_above(c(" " = 1, "Série 1 (1993-1999)" = 2, "Série 2 (2004-2008)" = 2))
+```
+
+
+### Interprétation
+Un modèle est plus efficace qu'un autre lorsque son AIC, son BIC, et/ou son RMSE est plus faible qu'un autre. Pour chacune des séries créées, ces 3 indicateurs sont inférieurs pour les modèles de type saisonnier. Cela signifie que prendre en compte explicitement la saisonnalité dans le modèle améliore la qualité des prédictions. 
+
+En effet, des AIC et BIC plus bas signifient que le modèle saisonnier offre une meilleure balance des séries. En outre, un RMSE plus bas indique que les prévisions du modèle saisonnier sont plus précises en moyenne.
+
+Ainsi, les modèles saisonniers capturent plus d'information sur la dynamique des deux séries temporelles que la simple différenciation saisonnière. Cela justifie l'utilisation de modèles SARIMA plutôt que de se limiter à la différenciation saisonnière.
