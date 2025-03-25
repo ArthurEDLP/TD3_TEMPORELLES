@@ -55,7 +55,7 @@ header-includes: |
 
     \item[] $Y_t = \frac{\left(1 + \theta_1 L + \theta_2 L^2 \right) \left(1 + \Theta_1 L^4\right)}{\left(1 - \phi_1 L\right) \left(1 - \Phi_1 L^4\right)} \varepsilon_t$
 
-    \vspace{0.3cm} % Ajout d'un espace avant l'équation suivante
+    \vspace{0.3cm} 
 
     \begin{minipage}{\textwidth}
     \[
@@ -63,7 +63,7 @@ header-includes: |
     \]
     \end{minipage}
 
-    \vspace{0.3cm} % Ajout d'un espace avant le texte explicatif
+    \vspace{0.3cm} 
 
     \noindent Au numérateur, le coefficient devant le 5ème et 6ème retard est négligeable. Donc MA(4). \\  
     Au dénominateur, le coefficient devant le 5ème retard est aussi négligeable. Donc AR(4). \\
@@ -76,35 +76,35 @@ header-includes: |
 
 \end{enumerate}
 
-
 ### Modèle 2
 
 \begin{enumerate}
 
     \item[] $Y_t = \frac{\left(1 + \theta_1 L\right) \left(1 + \Theta_1 L^6\right)}{\left(1 - \phi_1 L\right) \left(1 - \Phi_1 L^6\right)} \varepsilon_t$
     
-    \vspace{0.5cm}
-    \noindent \
-    \begin{align*}
-    \\
-    \vspace{0.9cm}
-    &= \frac{1 + \Theta_1 L^6 + \theta_1 L + \theta_1 \Theta_1 L^7}{1 - \Phi_1 L^6 - \phi_1 L + \phi_1 \Phi_1 L^7} \varepsilon_t
-    \end{align*}
+    \vspace{0.3cm} 
 
-   \noindent Nous obtenons initialement un processus $ARMA(7,7)$. Cependant, les coefficients $\theta_1 \Theta_1$ et $\phi_1 \Phi_1$ étant négligeables, nous nous ramenons à un $ARMA(6,6)$.
+    \begin{minipage}{\textwidth}
+    \[
+    Y-t= \frac{1 + \Theta_1 L^6 + \theta_1 L + \theta_1 \Theta_1 L^7}{1 - \Phi_1 L^6 - \phi_1 L + \phi_1 \Phi_1 L^7} \varepsilon_t
+    \]
+    \end{minipage}
 
-Dans la partie $MA$, seuls $\theta_1$ et $\Theta_1$ sont présents, ce qui signifie que $4$ $(=6-2)$ coefficients sont nuls. Pour la partie $AR$, nous avons $\phi_1$ et $\Phi_1$, ce qui veut dire que $4$ $(=6-2)$ coefficients sont nuls.
+    \vspace{0.3cm}
+    
+    \noindent Au numérateur, le coefficent devant le 7ème retard est
+    négligeable. Donc MA(6). \\
+    Au dénominateur, le coefficient devant le 7ème retard est aussi
+    négligeable. Donc AR(6). \\
 
-Au final :
-\begin{itemize}
-\item Pour la partie $MA$ : 1 coefficient est négligeable et 4 sont nuls.
-\item Pour la partie $AR$ : 1 coefficient est négligeable et 4 sont nuls.
-\end{itemize}
+    Nous avons donc un modèle ARMA(6,6), avec :
+    \begin{itemize}
+    \item 4 coefficients à estimer
+    \item 8 coefficients nuls
+    \end{itemize} 
 
-Ainsi, il ne reste que 4 coefficients à estimer.  \\ \\ \\ \\
 
 \end{enumerate}
-
 
 ### Modèle 3
 
@@ -112,31 +112,128 @@ Ainsi, il ne reste que 4 coefficients à estimer.  \\ \\ \\ \\
 
     \item[] $Y_t = \frac{\left(1 + \Theta_1 L^{12}\right)}{\left(1 - \phi_1 L - \phi_2 L^2\right)} \varepsilon_t$
     
-    \vspace{0.5cm}
-    \noindent \textbf{Réponse :}
-    \begin{align*}
-    Y_t &= \frac{\left(1 + \Theta_1 L^{12}\right)}{\left(1 - \phi_1 L - \phi_2 L^2\right)} \varepsilon_t \\
-    \vspace{0.9cm}
-    &= \frac{1 + \Theta_1 L^{12}}{1 - \phi_1 L - \phi_2 L^2} \varepsilon_t
-    \end{align*}
+    \vspace{0.3cm} 
 
-   \noindent Nous obtenons donc un processus $ARMA(2,12)$. Étant donné qu'il n'y a pas de coefficient négligeable, nous conservons le processus tel quel.
+    \begin{minipage}{\textwidth}
+    \[
+    Y_t= \frac{1 + \Theta_1 L^{12}}{1 - \phi_1 L - \phi_2 L^2} \varepsilon_t
+    \]
+    \end{minipage}
 
-Dans la partie $MA$, seul $\Theta_1$ est présent, ce qui signifie que $11$ $(=12-1)$ coefficients sont nuls. Pour la partie $AR$, nous avons $\phi_1$ et $\phi_2$, ce qui veut dire qu'aucun $(=2-2)$ coefficient n'est nul.
+    \vspace{0.3cm}
+    
+    \noindent Au numérateur, pas de coefficients négligeables. Donc MA(12).
+    \\
+    Au dénominateur, pas de coefficients négligeables. Donc AR(2). \\
 
-Au final :
-\begin{itemize}
-\item Pour la partie $MA$ : aucun coefficient n'est négligeable et 11 sont nuls.
-\item Pour la partie $AR$ : aucun coefficient n'est négligeable et aucun n'est nul.
-\end{itemize}
-
-Ainsi, il ne reste que 3 coefficients à estimer.  \\ \\ \\ \\
+    Nous avons donc un modèle ARMA(2,12), avec :
+    \begin{itemize}
+    \item 3 coefficients à estimer
+    \item 11 coefficients nuls
+    \end{itemize}
 
 \end{enumerate}
 
 ## Analyse d'un échantillon de 500 observations
 
+### Travail préparatoire 
+
+#### Chargement des librairies
+```{r}
+library(forecast)
+```
+
+### Fonction d'analyse de la série
+```{r}
+plot_series_acf_pacf <- function(series, title) {
+  
+  plot(series, type="l", main=paste("SÃ©rie simulÃ©e -", title), col="blue", ylab="Valeurs", xlab="Temps")
+  
+  # AutocorrÃ©logramme (ACF)
+  Acf(series, main="ACF", col="red")
+  
+  # AutocorrÃ©logramme partiel (PACF)
+  Pacf(series, main="PACF", col="darkgreen")
+  
+  par(mfrow=c(1,1))  # Reset affichage
+}
+```
+
+### Modèle 1
+
+#### Génération des données
+```{r}
+set.seed(123)
+simulated_data_1 <- arima.sim(n = 500,
+          model = list(ar = c(0.4), ma = c(0.3, 0.3),
+                       seasonal = list(ar = c(0.4), ma = c(0.3), period = 4)))
+```
+
+#### Visualisation de la série
+```{r}
+plot_series_acf_pacf(simulated_data_1, "Modèle 1 (ARMA saisonnier, périodicité 4)")
+```
+
+On distingue un modèle ARMA(1, 2) via l'observation des graphiques.
+
+### Modèle 2
+
+#### Génération des données
+```{r}
+simulated_data_2 <- arima.sim(n = 500,
+          model = list(ar = c(0.4), ma = c(0.4),
+                       seasonal = list(ar = c(0.4), ma = c(0.4), period = 6)))
+```
+
+#### Visualisation de la série
+```{r}
+plot_series_acf_pacf(simulated_data_2, "Modèle 2 (ARMA saisonnier, périodicité)")
+```
+
+On distingue un modèle ARMA(2,1) via l'observation des graphiques.
+
+### Modèle 3
+
+#### Génération des données
+```{r}
+simulated_data_3 <- arima.sim(n = 500,
+                              model = list(ar = c(0.6, -0.3),
+                                           seasonal = list(ma = c(0.8), period = 12)))
+```
+
+#### Visualisation de la série
+```{r}
+plot_series_acf_pacf(simulated_data_3, "Modèle 3 (AR(2) saisonnier, périodicité 12)")
+```
+
+On distingue un modèle ARMA(2,3) via l'observation des graphiques.
+
 ## Modélisatin des processus simulés
+
+### Modèle 1
+
+#### Ajustement du modèle ARMA(1,2)
+```{r}
+fit_arma_1_2 <- arima(simulated_data_1, order=c(1, 0, 2))
+```
+
+#### Résidus
+```{r}
+residuals_1_2 <- residuals(fit_arma_1_2)
+```
+
+#### ACF et PACF
+```{r}
+plot_series_acf_pacf(residuals_1_2, "Modèle ARMA(1, 2)")
+```
+
+### Modèle 2
+
+#### Ajustement du modèle ARMA(2,1)
+
+
+### Modèle 3
+
 
 ## Proposition d'un modèle contenant des résidus de type bruit blanc
 
